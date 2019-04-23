@@ -1,0 +1,38 @@
+services:
+  db:
+    environment:
+      ACCEPT_EULA: "Y"
+      SA_PASSWORD: Your_password123
+    image: mcr.microsoft.com/mssql/server
+  website:
+    build:
+      context: C:\Dev\CIM\dockerize-ASP.NET-Core
+      dockerfile: Dockerfile
+      target: base
+    depends_on:
+    - db
+    entrypoint: tail -f /dev/null
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_URLS: http://+:80
+      DOTNET_USE_POLLING_FILE_WATCHER: '1'
+      NUGET_FALLBACK_PACKAGES: /root/.nuget/fallbackpackages
+    image: website:dev
+    labels:
+      com.microsoft.visualstudio.debuggee.arguments: ' --additionalProbingPath /root/.nuget/packages
+        --additionalProbingPath /root/.nuget/fallbackpackages  bin/Debug/netcoreapp2.2/WebSite.dll'
+      com.microsoft.visualstudio.debuggee.killprogram: /bin/bash -c "if PID=$$(pidof
+        -x dotnet); then kill $$PID; fi"
+      com.microsoft.visualstudio.debuggee.program: dotnet
+      com.microsoft.visualstudio.debuggee.workingdirectory: /app
+    ports:
+    - published: 40456
+      target: 80
+    volumes:
+    - C:\Dev\CIM\dockerize-ASP.NET-Core:/app:rw
+    - C:\Users\nicol\vsdbg\vs2017u5:/remote_debugger:ro
+    - C:\Users\nicol\AppData\Roaming\ASP.NET\Https:/root/.aspnet/https:ro
+    - C:\Users\nicol\AppData\Roaming\Microsoft\UserSecrets:/root/.microsoft/usersecrets:ro
+    - C:\Program Files\dotnet\sdk\NuGetFallbackFolder:/root/.nuget/fallbackpackages:ro
+    - C:\Users\nicol\.nuget\packages:/root/.nuget/packages:ro
+version: '3.4'

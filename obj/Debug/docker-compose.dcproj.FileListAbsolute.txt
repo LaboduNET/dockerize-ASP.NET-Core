@@ -1,0 +1,1 @@
+C:\Dev\CIM\dockerize-ASP.NET-Core\obj\Debug\docker-compose.dcproj.CoreCompileInputs.cache

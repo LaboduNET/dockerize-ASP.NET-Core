@@ -1,0 +1,23 @@
+services:
+  db:
+    environment:
+      ACCEPT_EULA: "Y"
+      SA_PASSWORD: Your_password123
+    image: mcr.microsoft.com/mssql/server
+  website:
+    build:
+      context: C:\Dev\CIM\dockerize-ASP.NET-Core
+      dockerfile: Dockerfile
+    depends_on:
+    - db
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_URLS: http://+:80
+    image: website
+    ports:
+    - published: 40456
+      target: 80
+    volumes:
+    - C:\Users\nicol\AppData\Roaming\ASP.NET\Https:/root/.aspnet/https:ro
+    - C:\Users\nicol\AppData\Roaming\Microsoft\UserSecrets:/root/.microsoft/usersecrets:ro
+version: '3.4'
