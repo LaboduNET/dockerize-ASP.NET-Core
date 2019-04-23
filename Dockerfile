@@ -9,7 +9,7 @@ EXPOSE 40456
 FROM microsoft/dotnet:2.2-sdk AS build
 WORKDIR /src
 COPY WebSite.csproj ./
-RUN dotnet restore /WebSite.csproj
+RUN dotnet restore WebSite.csproj
 COPY . .
 WORKDIR /src/
 RUN dotnet build WebSite.csproj -c Release -o /app
